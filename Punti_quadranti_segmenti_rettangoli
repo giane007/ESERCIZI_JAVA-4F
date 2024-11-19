@@ -1,55 +1,26 @@
 //Main
-import java.util.ArrayList;
 import java.util.Scanner;
-
 public class Main {
+
     public static void main(String[] args) {
         Scanner tastiera = new Scanner(System.in);
 
-        ArrayList<Rettangolo> info = new ArrayList<>();
-        
-        System.out.println("Inserisci coordiata X primo punto:");
-        double coordinataXprimo = tastiera.nextDouble();
-        System.out.println("Inserisci coordiata Y primo punto:");
-        double coordinataYprimo = tastiera.nextDouble();
-        
-        System.out.println("Inserisci coordiata X secondo punto:");
-        double coordinataXsecondo = tastiera.nextDouble();
-        System.out.println("Inserisci coordiata Y secondo punto:");
-        double coordinataYsecondo = tastiera.nextDouble();
+        System.out.println("Inserisci coordinata X del punto in alto a sinistra del rettangolo:");
+        double x = tastiera.nextDouble();
+        System.out.println("Inserisci coordinata Y del punto in alto a sinistra del rettangolo:");
+        double y = tastiera.nextDouble();
+        System.out.println("Inserisci la base del rettangolo:");
+        double base = tastiera.nextDouble();
+        System.out.println("Inserisci l'altezza del rettangolo:");
+        double altezza = tastiera.nextDouble();
 
-        System.out.println("Inserisci coordiata X secondo punto:");
-        double coordinataXterzo = tastiera.nextDouble();
-        System.out.println("Inserisci coordiata Y secondo punto:");
-        double coordinataYterzo = tastiera.nextDouble();
-
-        System.out.println("Inserisci coordiata X secondo punto:");
-        double coordinataXquarto = tastiera.nextDouble();
-        System.out.println("Inserisci coordiata Y secondo punto:");
-        double coordinataYquarto = tastiera.nextDouble();
-        
-        
-
-        Punto primo = new Punto(coordinataXprimo, coordinataYprimo);
-        Punto secondo = new Punto(coordinataXsecondo, coordinataYsecondo);
-        Punto terzo = new Punto(coordinataXterzo, coordinataYterzo);
-        Punto quarto = new Punto(coordinataXquarto,coordinataYquarto);
-        
-        
-        Segmento segmento1 = new Segmento(primo, secondo);
-        System.out.println(segmento1.toString());
-        
-        Segmento segmento2 = new Segmento(terzo,quarto);
-        System.out.println(segmento2.toString());
-
-        Segmento segmento3 = new Segmento(primo,terzo);
-        System.out.println(segmento3.toString());
-
-        Segmento segmento4 = new Segmento(secondo,quarto);
-        System.out.println(segmento4.toString());
-
-        
-
+        try {
+            Punto puntoAltoSinistra = new Punto(x, y);
+            Rettangolo rettangolo = new Rettangolo(puntoAltoSinistra, base, altezza);
+            System.out.println(rettangolo);
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
     }
 }
 
@@ -69,20 +40,53 @@ public class Segmento {
 }
 
 //Classe Rettangolo
+import java.util.ArrayList;
+
 public class Rettangolo {
-    private Punto punto1;
-    private Punto punto2;
-    private Punto punto3;
-    private Punto punto4;
-    private double segmento1;
-    private double segmento2;
-    private double altezza = segmento1 * segmento2;
+    private Punto puntoAltoSinistra;
+    private double base;
+    private double altezza;
+    private ArrayList<Segmento> segmenti;
 
-    public void SetSegmento(){
+    public Rettangolo(Punto puntoAltoSinistra, double base, double altezza) throws Exception {
+        this.puntoAltoSinistra = puntoAltoSinistra;
+        this.base = base;
+        this.altezza = altezza;
 
+        // Calcolo dei punti restanti
+        Punto puntoAltoDestra = new Punto(puntoAltoSinistra.getX() + base, puntoAltoSinistra.getY());
+        Punto puntoBassoSinistra = new Punto(puntoAltoSinistra.getX(), puntoAltoSinistra.getY() - altezza);
+        Punto puntoBassoDestra = new Punto(puntoAltoSinistra.getX() + base, puntoAltoSinistra.getY() - altezza);
+
+        // Verifica che tutti i punti siano nel primo quadrante
+        verificaPrimoQuadrante(puntoAltoSinistra);
+        verificaPrimoQuadrante(puntoAltoDestra);
+        verificaPrimoQuadrante(puntoBassoSinistra);
+        verificaPrimoQuadrante(puntoBassoDestra);
+
+        // Creazione dei segmenti
+        segmenti = new ArrayList<>();
+        segmenti.add(new Segmento(puntoAltoSinistra, puntoAltoDestra));  // Base superiore
+        segmenti.add(new Segmento(puntoAltoDestra, puntoBassoDestra));  // Lato destro
+        segmenti.add(new Segmento(puntoBassoDestra, puntoBassoSinistra));  // Base inferiore
+        segmenti.add(new Segmento(puntoBassoSinistra, puntoAltoSinistra));  // Lato sinistro
+    }
+
+    private void verificaPrimoQuadrante(Punto punto) throws Exception {
+        if (punto.getX() < 0 || punto.getY() < 0) {
+            throw new Exception("Il punto " + punto + " non è nel primo quadrante.");
+        }
+    }
+
+    public ArrayList<Segmento> getSegmenti() {
+        return segmenti;
+    }
+
+    @Override
+    public String toString() {
+        return "Rettangolo con base " + base + ", altezza " + altezza + " e segmenti: " + segmenti;
     }
 }
-
 
 //Classe Punto
 public class Punto {
