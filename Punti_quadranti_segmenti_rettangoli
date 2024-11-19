@@ -1,0 +1,136 @@
+//Main
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner tastiera = new Scanner(System.in);
+
+        ArrayList<Rettangolo> info = new ArrayList<>();
+        
+        System.out.println("Inserisci coordiata X primo punto:");
+        double coordinataXprimo = tastiera.nextDouble();
+        System.out.println("Inserisci coordiata Y primo punto:");
+        double coordinataYprimo = tastiera.nextDouble();
+        
+        System.out.println("Inserisci coordiata X secondo punto:");
+        double coordinataXsecondo = tastiera.nextDouble();
+        System.out.println("Inserisci coordiata Y secondo punto:");
+        double coordinataYsecondo = tastiera.nextDouble();
+
+        System.out.println("Inserisci coordiata X secondo punto:");
+        double coordinataXterzo = tastiera.nextDouble();
+        System.out.println("Inserisci coordiata Y secondo punto:");
+        double coordinataYterzo = tastiera.nextDouble();
+
+        System.out.println("Inserisci coordiata X secondo punto:");
+        double coordinataXquarto = tastiera.nextDouble();
+        System.out.println("Inserisci coordiata Y secondo punto:");
+        double coordinataYquarto = tastiera.nextDouble();
+        
+        
+
+        Punto primo = new Punto(coordinataXprimo, coordinataYprimo);
+        Punto secondo = new Punto(coordinataXsecondo, coordinataYsecondo);
+        Punto terzo = new Punto(coordinataXterzo, coordinataYterzo);
+        Punto quarto = new Punto(coordinataXquarto,coordinataYquarto);
+        
+        
+        Segmento segmento1 = new Segmento(primo, secondo);
+        System.out.println(segmento1.toString());
+        
+        Segmento segmento2 = new Segmento(terzo,quarto);
+        System.out.println(segmento2.toString());
+
+        Segmento segmento3 = new Segmento(primo,terzo);
+        System.out.println(segmento3.toString());
+
+        Segmento segmento4 = new Segmento(secondo,quarto);
+        System.out.println(segmento4.toString());
+
+        
+
+    }
+}
+
+//Classe Segmento
+import java.lang.Math;
+
+public class Segmento {
+    private double lunghezza;
+    public Segmento(Punto primo, Punto secondo){
+        this.lunghezza=Math.sqrt(Math.pow(primo.getX()-secondo.getX(),2)+Math.pow(primo.getY()- secondo.getY(),2));
+    }
+
+    @Override
+    public String toString() {
+        return "lunghezza" +lunghezza;
+    }
+}
+
+//Classe Rettangolo
+public class Rettangolo {
+    private Punto punto1;
+    private Punto punto2;
+    private Punto punto3;
+    private Punto punto4;
+    private double segmento1;
+    private double segmento2;
+    private double altezza = segmento1 * segmento2;
+
+    public void SetSegmento(){
+
+    }
+}
+
+
+//Classe Punto
+public class Punto {
+    private double x;
+    private double y;
+
+
+    public Punto(double x, double y) {
+        setX(x);
+        setY(y);
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getX() {
+        return this.x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getY() {
+        return this.y;
+    }
+
+    public String trovaQuadrante() {
+        if (getX() > 0 && getY() > 0) {
+            return "Il punto si trova nel primo quadrante";
+        } else if (getX() < 0 && getY() > 0) {
+            return "Il punto si trova nel secondo quadrante";
+        } else if (getX() > 0 && getY() < 0) {
+            return "Il punto si trova nel quarto quadrante";
+        } else if (getX() < 0 && getY() < 0) {
+            return "Il punto si trova nel terzo quadrante";
+        } else if (getX() == 0 && getY() > 0 || getY() < 0) {
+            return "Il punto si trova sull'asse Y";
+        } else if (getY() == 0 && getX() > 0 || getX() < 0) {
+            return "Il punto si trova sull'asse X";
+        } else {
+            return "Il punto si trova all'origine";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "X=" + getX() + " - Y=" + getY();
+    }
+}
