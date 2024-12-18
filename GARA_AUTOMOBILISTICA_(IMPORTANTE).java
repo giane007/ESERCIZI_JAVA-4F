@@ -341,3 +341,167 @@ public class Tools {
         return scelta;
     }
 }
+
+//IN LAVORAZIONE!!!
+//Classe FrontEnd
+
+/*package Utility;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class FrontEnd {
+
+    final private Scanner scanner;
+
+    public FrontEnd(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    
+      //Mostra il menu principale e restituisce la scelta dell'utente.
+     
+    public int mostraMenuPrincipale() {
+        String[] opzioni = {
+                "Menu Principale",
+                "Avvia una nuova gara",
+                "Visualizza istruzioni",
+                "Esci"
+        };
+
+        System.out.println("------------------");
+        for (int i = 0; i < opzioni.length; i++) {
+            System.out.println("[" + i + "] " + opzioni[i]);
+        }
+
+        int scelta;
+        do {
+            System.out.print("Seleziona un'opzione: ");
+            try {
+                scelta = Integer.parseInt(scanner.nextLine());
+                if (scelta < 0 || scelta >= opzioni.length) {
+                    System.out.println("Opzione non valida, riprova.");
+                } else {
+                    return scelta;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Input non valido. Inserisci un numero.");
+            }
+        } while (true);
+    }
+
+      //Mostra un'introduzione al programma.
+     
+    public void mostraBenvenuto() {
+        System.out.println("=================================");
+        System.out.println(" BENVENUTO NEL SISTEMA DI GARE");
+        System.out.println("=================================");
+    }
+
+   
+     // Mostra le istruzioni del programma.
+     
+    public void mostraIstruzioni() {
+        System.out.println("\n--- ISTRUZIONI ---");
+        System.out.println("1. Inserisci i dati delle scuderie e dei piloti.");
+        System.out.println("2. Avvia la gara e visualizza i risultati.");
+        System.out.println("3. Ogni scuderia gareggia e il cronometro calcola i tempi.");
+        System.out.println("4. Il vincitore è chi completa la gara nel minor tempo.");
+        System.out.println("Buona fortuna!\n");
+    }
+
+    
+     // Chiede all'utente di inserire i dettagli di una gara.
+     
+    public String chiediNomeGara() {
+        System.out.print("Inserisci il nome della gara: ");
+        return scanner.nextLine();
+    }
+
+    
+     // Chiede all'utente di inserire i dettagli di una scuderia.
+     
+    public String[] chiediDatiScuderia(int numero) {
+        System.out.println("\nInserisci i dettagli per la scuderia " + numero + ":");
+        System.out.print("Nome del pilota: ");
+        String pilotaNome = scanner.nextLine();
+
+        System.out.print("Nome della scuderia: ");
+        String scuderiaNome = scanner.nextLine();
+
+        return new String[] { pilotaNome, scuderiaNome };
+    }
+
+    
+     // Mostra la griglia di partenza o i risultati della gara.
+     
+    public void mostraGriglia(String titolo, List<Scuderia> griglia) {
+        System.out.println("\n=== " + titolo + " ===");
+        for (int i = 0; i < griglia.size(); i++) {
+            Scuderia scuderia = griglia.get(i);
+            System.out.printf("[%d] %s - Pilota: %s - Tempo: %s\n",
+                    i + 1, scuderia.getNome(), scuderia.getPilotaNome(), scuderia.getCronometro());
+        }
+    }
+
+        public void mostraVincitore(String vincitore) {
+        System.out.println("\n=== VINCITORE ===");
+        System.out.println("Scuderia: " + Arrays.toString(vincitore.getBytes()));
+        System.out.println("Pilota: " + vincitore);
+        System.out.println("Tempo: " + vincitore);
+    }
+
+    
+     //Mostra un messaggio generico.
+     
+    public void mostraMessaggio(String messaggio) {
+        System.out.println(messaggio);
+    }
+
+    
+     // Mostra un messaggio di errore.
+     
+    public void mostraErrore(String errore) {
+        System.err.println("\n!!! ERRORE: " + errore + " !!!");
+    }
+
+        public void mostraCaricamento() {
+        
+        String macchinaAvanti = "               __\n" +
+                "                   _.--\"\"  |\n" +
+                "    .----.     _.-'   |/\\| |.--.\n" +
+                "    |jrei|__.-'   _________|  |_)  _______________  \n" +
+                "    |  .-\"\"-.\"\"\"\"\" ___,    `----'\"))   __   .-\"\"-.\"\"\"\"--._  \n" +
+                "    '-' ,--. `    |tic|   .---.       |:.| ' ,--. `      _`.\n" +
+                "     ( (    ) ) __|tac|__ \\\\|// _..--  \\/ ( (    ) )--._\".-.\n" +
+                "      . `--' ;\\__________________..--------. `--' ;--------'\n" +
+                "       `-..-'                               `-..-'";
+
+        String macchinaIndietro =
+                "                                     __\n" +
+                        "                               _.--\"\"  |\n" +
+                        "                .----.     _.-'   |/\\| |.--.\n" +
+                        "               |jrei|__.-'   _________|  |_)  _______________  \n" +
+                        "               |  .-\"\"-.\"\"\"\"\" ___,    `----'\"))   __   .-\"\"-.\"\"\"\"--._  \n" +
+                        "               '-' ,--. `    |tic|   .---.       |:.| ' ,- -. `      _`.\n" +
+                        "                ( (    ) ) __|tac|__ \\\\|// _..-- \\/( (    ) )--._\".-.\n" +
+                        "                 . `--' ;\\__________________..--------. `--' ;--------'\n" +
+                        "                  `-..-'                                `-..-'";
+
+        Thread animazioneThread = new Thread(() -> {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    System.out.println(macchinaAvanti);
+                    Thread.sleep(500);
+                    System.out.println(macchinaIndietro);
+                    Thread.sleep(500);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Animazione interrotta.");
+            }
+        });
+        animazioneThread.start();
+    }
+}
+*/
