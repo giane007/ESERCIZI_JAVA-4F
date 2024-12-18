@@ -1,9 +1,12 @@
-import java.util.Collections;
+//Classe Main
+package Utility;
+
+import Utility.*;
+
 import java.util.Random;
 import java.util.Scanner;
 
-import static utility.Tools.*;
-
+// Classe principale
 public class Main {
     public static void main(String[] args) {
         Random random = new Random();
@@ -62,19 +65,19 @@ public class Main {
             animazioneThread.start();
 
             // Calcolo dei tempi per ciascuna scuderia
-            tempo = random.nextInt(1000, 5000) + 1;  // Ridotto il tempo per test
+            tempo = random.nextInt(4001) + 1000; // Tempo casuale tra 1000 e 5000 ms
             cronometro1.setStartTime();
             Wait(tempo);
             cronometro1.setEndTime();
             cronometro1.calcolaIntTimer();
 
-            tempo = random.nextInt(1000, 5000) + 1;
+            tempo = random.nextInt(4001) + 1000;
             cronometro2.setStartTime();
             Wait(tempo);
             cronometro2.setEndTime();
             cronometro2.calcolaIntTimer();
 
-            tempo = random.nextInt(1000, 5000) + 1;
+            tempo = random.nextInt(4001) + 1000;
             cronometro3.setStartTime();
             Wait(tempo);
             cronometro3.setEndTime();
@@ -125,34 +128,44 @@ public class Main {
         System.out.print("\r" + macchinaIndietro);
         try { Thread.sleep(300); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
     }
+
+    public static void Wait(int attesa) {
+        try {
+            Thread.sleep(attesa);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
-public class Cronometro {
-    private long startTime;         // Tempo di inizio
-    private long endTime;           // Tempo di fine
-    private int tempoTotale;        // Tempo totale impiegato
 
-    // Imposta l'orario di inizio del cronometro
+
+
+
+//Classe Cronometro
+package Utility;
+
+public class Cronometro {
+    private long startTime;
+    private long endTime;
+    private int tempoTotale;
+
     public void setStartTime() {
         this.startTime = System.currentTimeMillis();
     }
 
-    // Imposta l'orario di fine del cronometro
     public void setEndTime() {
         this.endTime = System.currentTimeMillis();
     }
 
-    // Calcola la durata totale in millisecondi
     public void calcolaIntTimer() {
         this.tempoTotale = (int) (endTime - startTime);
     }
 
-    // Restituisce il tempo totale in millisecondi
     public int getTempoTotale() {
         return tempoTotale;
     }
 
-    // Metodo toString per visualizzare il tempo in formato leggibile
     @Override
     public String toString() {
         return tempoTotale + " ms";
@@ -160,61 +173,63 @@ public class Cronometro {
 }
 
 
-import java.util.ArrayList;
-import java.util.Collections;
+
+
+
+//Classe Gara
+package Utility;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 
 public class Gara {
-    private String nomeGara;          // Nome della gara
-    private Pilota nazioneGara;       // Nazione della gara (può essere utilizzato per identificare la località)
-    private List<Scuderia> griglia;   // Lista delle scuderie partecipanti
+    private String nomeGara;
+    private Pilota nazioneGara;
+    private ArrayList<Scuderia> griglia;
 
-    // Costruttore per inizializzare i dati della gara
     public Gara(String nomeGara, Pilota nazioneGara) {
         this.nomeGara = nomeGara;
         this.nazioneGara = nazioneGara;
         this.griglia = new ArrayList<>();
     }
 
-    // Metodo per aggiungere una scuderia alla gara
     public void aggiungiElemento(Scuderia scuderia) {
         griglia.add(scuderia);
     }
 
-    // Ordina le scuderie in base al tempo (più veloce prima)
     public void ordinaGara() {
-        Collections.sort(griglia);
+        Collections.sort(griglia, Comparator.comparing(Scuderia::getPilotaNome));
     }
 
-    // Restituisce la lista delle scuderie ordinate
-    public List<Scuderia> getGriglia() {
+    public ArrayList<Scuderia> getGriglia() {
         return griglia;
     }
 
-    // Restituisce il vincitore della gara (scuderia con il miglior tempo)
     public String getVincitore() {
         if (griglia.isEmpty()) return "Nessun vincitore";
+        return griglia.get(0).getPilotaNome();
+    }
+}
 
 
-        return griglia.get(0).getPilotaNome() + " " + griglia.get(0).getPilotaNome();
 
+
+
+//Classe Pilota
+package Utility;
 
 public class Pilota {
-    private String nome;            // Nome del pilota
-    private String cognome;         // Cognome del pilota
-    private String nazionalita;     // Nazionalità del pilota
+    private String nome;
+    private String cognome;
+    private String nazionalita;
 
-    // Costruttore per inizializzare i dati del pilota
     public Pilota(String nome, String cognome, String nazionalita) {
         this.nome = nome;
         this.cognome = cognome;
         this.nazionalita = nazionalita;
     }
 
-    // Getters per accedere ai dati del pilota
     public String getNome() {
         return nome;
     }
@@ -227,7 +242,6 @@ public class Pilota {
         return nazionalita;
     }
 
-    // Metodo toString per stampare i dati del pilota in formato leggibile
     @Override
     public String toString() {
         return nome + " " + cognome + " (" + nazionalita + ")";
@@ -235,13 +249,18 @@ public class Pilota {
 }
 
 
-public class Scuderia implements Comparable<Scuderia> {
-    private String nome;             // Nome della scuderia
-    private String pilotaNome;       // Nome del pilota (ora trattato come Stringa)
-    private int punteggio;           // Punteggio della scuderia (può essere usato come bonus o altre logiche)
-    private Cronometro cronometro;   // Cronometro per calcolare il tempo della scuderia
 
-    // Costruttore per inizializzare la scuderia con i dati forniti
+
+
+//Classe Scuderia
+package Utility;
+
+public class Scuderia implements Comparable<Scuderia> {
+    private String nome;
+    private String pilotaNome;
+    private int punteggio;
+    private Cronometro cronometro;
+
     public Scuderia(String nome, String pilotaNome, int punteggio, Cronometro cronometro) {
         this.nome = nome;
         this.pilotaNome = pilotaNome;
@@ -249,7 +268,6 @@ public class Scuderia implements Comparable<Scuderia> {
         this.cronometro = cronometro;
     }
 
-    // Getters per i vari attributi
     public String getNome() {
         return nome;
     }
@@ -266,13 +284,11 @@ public class Scuderia implements Comparable<Scuderia> {
         return pilotaNome;
     }
 
-    // Implementazione del metodo compareTo per ordinare le scuderie in base al tempo
     @Override
     public int compareTo(Scuderia altra) {
         return Integer.compare(this.cronometro.getTempoTotale(), altra.cronometro.getTempoTotale());
     }
 
-    // Metodo toString per stampare i dati della scuderia in formato leggibile
     @Override
     public String toString() {
         return "Scuderia: " + nome + ", Pilota: " + pilotaNome + ", Tempo: " + cronometro;
@@ -280,9 +296,13 @@ public class Scuderia implements Comparable<Scuderia> {
 }
 
 
-package utility;
+
+
+//Classe tools
+package Utility;
 
 import java.util.Scanner;
+
 public class Tools {
 
     public static void clrScr() {
@@ -301,7 +321,7 @@ public class Tools {
         }
     }
 
-    public static int Menu(String opzioni[], Scanner tastiera) {// parametri formali
+    public static int Menu(String opzioni[], Scanner tastiera) {
         int scelta;
 
         do {
@@ -312,15 +332,12 @@ public class Tools {
             for (int i = 1; i < opzioni.length; i++) {
                 System.out.println("[" + i + "]" + " " + opzioni[i]);
             }
-            scelta = (Integer.parseInt(tastiera.nextLine()));
-            //tastiera.nextLine();
+            scelta = Integer.parseInt(tastiera.nextLine());
             if ((scelta < 1) || (scelta > opzioni.length - 1)) {
                 System.out.println("Opzione Sbagliata");
                 Wait(2000);
             }
-        }
-        while ((scelta < 1) || (scelta > opzioni.length - 1));
-        //tastiera.nextLine();
+        } while ((scelta < 1) || (scelta > opzioni.length - 1));
         return scelta;
     }
 }
