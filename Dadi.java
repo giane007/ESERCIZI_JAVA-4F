@@ -1,19 +1,27 @@
-import Tools.Utility;
-
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         Scanner tastiera = new Scanner(System.in);
-        int giocatori = 2;
-        int turni;
 
-        System.out.println("Inserisci il numero di turni");
-        Gara.setTurni = (Integer.parseInt(tastiera.nextLine()));
+        System.out.println("Inserisci il nome del Giocatore 1:");
+        String nome1 = tastiera.nextLine();
 
-    switch (Utility.Menu(giocatori)) {}
+        System.out.println("Inserisci il nome del Giocatore 2:");
+        String nome2 = tastiera.nextLine();
 
+        System.out.println("Inserisci il numero di turni:");
+        int turni = Integer.parseInt(tastiera.nextLine());
+
+        Giocatore giocatore1 = new Giocatore(nome1, 0);
+        Giocatore giocatore2 = new Giocatore(nome2, 0);
+        Dado dado = new Dado(new Random(), 6, 1);
+
+        Gara gara = new Gara(false, "", turni);
+        gara.round(giocatore1, giocatore2, dado);
+
+        gara.risultatoPartita(giocatore1, giocatore2);
     }
 }
 
@@ -21,61 +29,53 @@ public class Main {
 
 
 
-
 public class Gara {
-    public static int setTurni;
     private boolean fineGara = false;
-    private String Vincitore;
+    private String vincitore;
     private int turni;
-
-    public boolean isFineGara() {
-        return fineGara;
-    }
-
-    public boolean setFineGara(boolean fineGara) {
-        return this.fineGara = fineGara;
-    }
-
-    public void setTurni(int turni) {
-        this.turni = turni;
-    }
-
-    public int getTurni() {
-        return turni;
-    }
-
-    public void setVincitore(String vincitore) {
-        Vincitore = vincitore;
-    }
-
-    public String getVincitore() {
-        return Vincitore;
-    }
 
     public Gara(boolean fineGara, String vincitore, int turni) {
         this.fineGara = fineGara;
-        Vincitore = vincitore;
+        this.vincitore = vincitore;
         this.turni = turni;
     }
 
-    public void round(String nomeGiocatore1, String nomeGiocatore2, Dado) {
-        for(int i=0; i< turni; i++){
-            if(i % 2 ==0){
-                System.out.println("Turno del giocatore 1");
+    public void round(Giocatore g1, Giocatore g2, Dado dado) {
+        for (int i = 0; i < turni; i++) {
+            System.out.println("Turno " + (i + 1));
 
-            }else{
-                System.out.println("Turno del giocatore 2");
+            int lancio1 = dado.lancia();
+            int lancio2 = dado.lancia();
+
+            System.out.println(g1.getNomeGiocatore() + " ha lanciato: " + lancio1);
+            System.out.println(g2.getNomeGiocatore() + " ha lanciato: " + lancio2);
+
+            if (lancio1 > lancio2) {
+                g1.setnVittorie(g1.getnVittorie() + 1);
+                System.out.println(g1.getNomeGiocatore() + " vince il turno!");
+            } else if (lancio2 > lancio1) {
+                g2.setnVittorie(g2.getnVittorie() + 1);
+                System.out.println(g2.getNomeGiocatore() + " vince il turno!");
+            } else {
+                g1.setnVittorie(g1.getnVittorie() + 1);
+                g2.setnVittorie(g2.getnVittorie() + 1);
+                System.out.println("Parità! Entrambi guadagnano un punto.");
             }
-
         }
     }
 
-    public void risultatoPartita(String nomeGiocatore1, String nomeGiocatore2){
+    public void risultatoPartita(Giocatore g1, Giocatore g2) {
+        System.out.println("\nRisultati finali:");
+        System.out.println(g1.getNomeGiocatore() + " ha vinto " + g1.getnVittorie() + " turni.");
+        System.out.println(g2.getNomeGiocatore() + " ha vinto " + g2.getnVittorie() + " turni.");
 
-    }
-
-    public void resettaGioco(boolean fineGara){
-        setFineGara(fineGara) = true;
+        if (g1.getnVittorie() > g2.getnVittorie()) {
+            System.out.println("Il vincitore è: " + g1.getNomeGiocatore());
+        } else if (g2.getnVittorie() > g1.getnVittorie()) {
+            System.out.println("Il vincitore è: " + g2.getNomeGiocatore());
+        } else {
+            System.out.println("La partita è finita in parità!");
+        }
     }
 }
 
@@ -88,72 +88,44 @@ public class Giocatore {
     private String nomeGiocatore;
     private int nVittorie;
 
-
-
-    public void setNomeGiocatore(String nomeGiocatore) {
+    public Giocatore(String nomeGiocatore, int nVittorie) {
         this.nomeGiocatore = nomeGiocatore;
+        this.nVittorie = nVittorie;
     }
 
     public String getNomeGiocatore() {
         return nomeGiocatore;
     }
 
-    public void setnVittorie(int nVittorie) {
-        this.nVittorie = nVittorie;
-    }
-
     public int getnVittorie() {
         return nVittorie;
     }
 
-
-    public Giocatore(String nomeGiocatore, int nVittorie) {
-        this.nomeGiocatore = nomeGiocatore;
+    public void setnVittorie(int nVittorie) {
         this.nVittorie = nVittorie;
     }
 }
-
 
 
 
 
 
 import java.util.Random;
+
 public class Dado {
     private int nFacce;
-    private int valFaccia;
-    private Random valLancio = new Random();
-
-    public void setnFacce(int nFacce) {
-        this.nFacce = nFacce;
-    }
-
-    public void setValFaccia(int valFaccia) {
-        this.valFaccia = valFaccia;
-    }
-
-    public void setValLancio(Random valLancio) {
-        this.valLancio = valLancio;
-    }
-
-    public int getnFacce() {
-        return nFacce;
-    }
-
-    public int getValFaccia() {
-        return valFaccia;
-    }
-
-    public Random getValLancio() {
-        return valLancio;
-    }
+    private Random valLancio;
 
     public Dado(Random valLancio, int nFacce, int valFaccia) {
         this.valLancio = valLancio;
         this.nFacce = nFacce;
-        this.valFaccia = valFaccia;
+    }
+
+    public int lancia() {
+        return valLancio.nextInt(nFacce) + 1;
     }
 }
+
 
 
 
